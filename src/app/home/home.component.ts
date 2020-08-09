@@ -70,39 +70,33 @@ export class HomeComponent implements OnInit {
   }
   uploadFile(file) {
     const formData = new FormData();
-    formData.append('file', file.data);
-    file.inProgress = true;
-    this.homeService.upload(formData).pipe(
-      map(event => {
-        switch (event.type) {
-          case HttpEventType.UploadProgress:
-            file.progress = Math.round(event.loaded * 100 / event.total);
-            break;
-          case HttpEventType.Response:
-            return event;
+    formData.append('image', file.data);
+    this.isLoading = true;
+    this.homeService.upload(formData).subscribe({
+      next: result => {
+        if (result['statusCode'] === 200) {
+          this.snackBar.open('Success', 'Upload', {
+            duration: 10000
+          });
+        } else {
+          this.snackBar.open('Server Error', 'Error', {
+            duration: 10000
+          });
         }
-      }),
-      catchError((error: HttpErrorResponse) => {
-        file.inProgress = false;
-        return of(`${file.data.name} upload failed.`);
-      })).subscribe((event: any) => {
-      if (typeof (event) === 'object') {
-        console.log(event.body);
+        this.isLoading = false;
       }
     });
   }
   private uploadFiles() {
     this.fileUpload.nativeElement.value = '';
-    this.files.forEach(file => {
-      this.uploadFile(file);
-    });
+    this.uploadFile(this.files[0]);
   }
   onClick() {
     const fileUpload = this.fileUpload.nativeElement;
     fileUpload.onchange = () => {
       for (let index = 0; index < fileUpload.files.length; index++) {
         const file = fileUpload.files[index];
-        this.files.push({ data: file, inProgress: false, progress: 0});
+        this.files.push({data: file, inProgress: false, progress: 0});
       }
       this.uploadFiles();
     };
