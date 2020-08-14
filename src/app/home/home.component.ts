@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
   }
   getInfo() {
     this.isLoading = true;
-    return this.http.get('https://se-redis-api.azurewebsites.net/information/get');
+    return this.http.get('https://se2015014.azurefd.net/information/get');
   }
   public profileClicked() {
     this.getProfile().subscribe({

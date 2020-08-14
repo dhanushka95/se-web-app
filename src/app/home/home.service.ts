@@ -5,7 +5,7 @@ import {HttpClient} from "@angular/common/http";
   providedIn: 'root'
 })
 export class HomeService {
-  SERVER_URL = 'https://se-redis-api.azurewebsites.net/image/add';
+  SERVER_URL = 'https://se2015014.azurefd.net/image/add';
   constructor(private httpClient: HttpClient) { }
   public upload(formData) {
 
